@@ -1,0 +1,3 @@
+# Compiled plugin - built on the pi-Stomp with "make", so don't store it in Git
+*.so
+*.o

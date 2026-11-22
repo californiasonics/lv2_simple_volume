@@ -1,0 +1,68 @@
+# =====================================================================
+#  manifest.ttl  -  FILE 1 of 4
+# =====================================================================
+#
+#  WHAT THIS FILE IS
+#  -----------------
+#  An LV2 plugin is not a single file. It is a FOLDER called a "bundle"
+#  whose name ends in .lv2  (here: lv2_simple_volume.lv2/).
+#
+#  When MOD starts up it looks through its plugin folders, opens every
+#  bundle, and reads ONLY this manifest.ttl. Think of it as the label on
+#  the box: "there is one plugin in here, this is its name tag, and this
+#  is where to find the rest of it."
+#
+#  Reading just this small file keeps start-up fast: MOD doesn't load
+#  any code or the full description until you actually use the pedal.
+#
+#  THE LANGUAGE: TURTLE (.ttl)
+#  ---------------------------
+#  Turtle is a plain-text way of writing facts as simple sentences:
+#
+#        subject   verb   object .
+#
+#  e.g.  <my-plugin>  is-a  Plugin .
+#
+#  - A sentence ends with a full stop  "."
+#  - A semicolon ";" means "same subject, here's another fact about it"
+#    (saves you repeating the subject on every line)
+#  - Anything in < > is a name (a URI) or a file name
+#  - Lines starting with # are comments, like this one
+# =====================================================================
+
+
+# ---------------------------------------------------------------------
+#  PREFIXES - shorthand so we don't type long web addresses every time.
+#  After this line, "lv2:Plugin" means
+#  <http://lv2plug.in/ns/lv2core#Plugin>. These addresses are just
+#  unique names; MOD never actually goes to the internet to read them.
+# ---------------------------------------------------------------------
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+
+# ---------------------------------------------------------------------
+#  THE PLUGIN'S UNIQUE ID (its "URI")
+#  Every LV2 plugin in the world needs a unique name. The convention is
+#  to use a web address you control, so nobody else picks the same one.
+#  It does NOT have to be a real working web page.
+#
+#  This exact string must ALSO appear in:
+#     - lv2_simple_volume.ttl   (file 2)
+#     - lv2_simple_volume.c     (file 3, as PLUGIN_URI)
+#  If they don't match, MOD won't connect the description to the code.
+# ---------------------------------------------------------------------
+<https://github.com/californiasonics/lv2_simple_volume>
+
+    # "a" is Turtle shorthand for "is a". So: this thing is an LV2 plugin.
+    a lv2:Plugin ;
+
+    # Where the compiled code lives (relative to this folder).
+    # The Makefile (file 4) builds this .so file from the C code.
+    # .so = "shared object", the Linux equivalent of a Windows .dll
+    lv2:binary <lv2_simple_volume.so> ;
+
+    # "See also": the full description (knobs, switches, name) is in
+    # this second file. MOD reads it only when it needs the details.
+    rdfs:seeAlso <lv2_simple_volume.ttl> .
+    #                                   ^ full stop = end of sentence

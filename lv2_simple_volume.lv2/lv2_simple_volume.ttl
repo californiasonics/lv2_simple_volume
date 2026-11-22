@@ -1,0 +1,150 @@
+# =====================================================================
+#  lv2_simple_volume.ttl  -  FILE 2 of 4
+# =====================================================================
+#
+#  WHAT THIS FILE IS
+#  -----------------
+#  The full description of the pedal: its name, and every "port".
+#
+#  A PORT is any connection between MOD and the plugin. Think of the
+#  jacks and pots on a hardware pedal:
+#
+#       Port 0  Audio IN      (input jack)
+#       Port 1  Audio OUT     (output jack)
+#       Port 2  Volume knob   (a pot)
+#       Port 3  On/Off        (the footswitch)
+#
+#  MOD uses this file to:
+#     - show the pedal's name in the pedal list
+#     - draw a default pedal on screen with the right knobs and switches
+#     - know the range and default for each knob
+#     - wire the audio in and out
+#
+#  The C code never sees these names. It only knows the port NUMBERS
+#  (lv2:index). So the numbers here MUST match the numbers in the C file.
+#
+#  Same Turtle rules as file 1:
+#     ";"  = another fact about the same thing
+#     ","  = another item in the same list
+#     "."  = end of the whole sentence
+#     [ ]  = a "thing without a name", used here for each port
+# =====================================================================
+
+
+# ---------------------------------------------------------------------
+#  PREFIXES (shorthand). Each one is a vocabulary of agreed words:
+#    doap  = "Description Of A Project": name, licence, author
+#    foaf  = "Friend Of A Friend": describing people
+#    lv2   = the core LV2 words: Plugin, port, index, minimum ...
+#    rdfs  = basic words like "seeAlso"
+#    units = units for knobs: dB, Hz, ms ...
+#    mod   = extra words that only MOD uses (brand and label on the pedal)
+# ---------------------------------------------------------------------
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix mod:   <http://moddevices.com/ns/mod#> .
+
+
+# ---------------------------------------------------------------------
+#  Same unique ID as in manifest.ttl. Everything below describes it.
+# ---------------------------------------------------------------------
+<https://github.com/californiasonics/lv2_simple_volume>
+
+    # It's a plugin, and its category is "Utility". The category sets
+    # which group it appears under in MOD's pedal list.
+    a lv2:Plugin, lv2:UtilityPlugin ;
+
+    # ---- Information shown to the user --------------------------------
+    doap:name "Simple Volume" ;                  # full name in lists
+    doap:license <http://opensource.org/licenses/isc> ;
+    doap:maintainer [ foaf:name "californiasonics" ] ;
+    mod:brand "Calsonics" ;                         # small text on the pedal
+    mod:label "Volume" ;                            # big text on the pedal
+
+    # ---- Version number -----------------------------------------------
+    # Bump these when you change the plugin, so MOD knows it's newer.
+    lv2:minorVersion 1 ;
+    lv2:microVersion 0 ;
+
+    # ---- Promise to the host ------------------------------------------
+    # "hardRTCapable" = hard real-time capable. We promise that run()
+    # never does anything slow or unpredictable (no memory allocation,
+    # no file access, no waiting). Missing an audio deadline = a click.
+    lv2:optionalFeature lv2:hardRTCapable ;
+
+    # ==================================================================
+    #  THE PORTS
+    #  Each port is in [ square brackets ], separated by commas.
+    #  Every port needs four things:
+    #     a type     : Audio or Control, and Input or Output
+    #     lv2:index  : its number (must match the C code)
+    #     lv2:symbol : a short code name: no spaces, used for saving
+    #                  presets and hardware mappings
+    #     lv2:name   : what the user sees on screen
+    # ==================================================================
+
+    # ---- Port 0: AUDIO IN ---------------------------------------------
+    # An AudioPort carries a block of audio samples (e.g. 128 numbers
+    # between -1.0 and +1.0) every time MOD calls run().
+    lv2:port [
+        a lv2:AudioPort, lv2:InputPort ;
+        lv2:index 0 ;
+        lv2:symbol "in" ;
+        lv2:name "In"
+    ] ,
+
+    # ---- Port 1: AUDIO OUT --------------------------------------------
+    # Same as above, but we WRITE the processed samples here.
+    [
+        a lv2:AudioPort, lv2:OutputPort ;
+        lv2:index 1 ;
+        lv2:symbol "out" ;
+        lv2:name "Out"
+    ] ,
+
+    # ---- Port 2: THE VOLUME KNOB --------------------------------------
+    # A ControlPort is a single number, not a stream of audio. MOD
+    # updates it when you turn the knob on screen or on the pi-Stomp.
+    #
+    # We work in decibels because that's how our ears hear loudness:
+    #   -40 dB = very quiet (1/100th of the signal level)
+    #     0 dB = unchanged (unity gain) <- the default
+    #    +6 dB = about double the signal level (a small boost)
+    # The C code converts dB into a multiplier.
+    [
+        a lv2:ControlPort, lv2:InputPort ;
+        lv2:index 2 ;
+        lv2:symbol "volume" ;
+        lv2:name "Volume" ;
+        lv2:default 0.0 ;
+        lv2:minimum -40.0 ;
+        lv2:maximum 6.0 ;
+        units:unit units:db              # MOD shows "dB" next to the value
+    ] ,
+
+    # ---- Port 3: THE FOOTSWITCH ---------------------------------------
+    # Another ControlPort, but it only ever holds 0 (off) or 1 (on).
+    #
+    # "lv2:toggled" tells MOD to draw an on/off switch instead of a knob.
+    #
+    # "lv2:designation lv2:enabled" is the important line. It tells MOD:
+    #   "This port IS my bypass switch."
+    # So when you assign the pi-Stomp footswitch to the pedal's on/off,
+    # MOD sends the change to this port, and the C code decides what
+    # "off" means. (Without this line MOD bypasses the pedal itself,
+    # and our code never knows the switch was pressed.)
+    [
+        a lv2:ControlPort, lv2:InputPort ;
+        lv2:index 3 ;
+        lv2:symbol "enabled" ;
+        lv2:name "On" ;
+        lv2:default 1 ;                  # pedal starts switched on
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:designation lv2:enabled ;
+        lv2:portProperty lv2:toggled
+    ] .
+    #   ^ full stop: end of the whole description

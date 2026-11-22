@@ -1,0 +1,3 @@
+# Keep Linux-style line endings (LF) even when edited on Windows.
+# The Makefile and .ttl files are used on the pi-Stomp (Linux).
+* text=auto eol=lf
