@@ -39,7 +39,12 @@
     position: relative;      /* lets the parts below be placed inside it */
 }
 
-/* The invisible drag handle fills the whole pedal */
+/* The invisible drag handle fills the whole pedal.
+ * IMPORTANT: MOD's own stylesheet puts the drag handle at z-index 20.
+ * z-index is the stacking height: higher numbers sit on top and get
+ * the mouse clicks first. So every control below gets z-index 30,
+ * which lifts it ABOVE the drag handle. Without that, the handle
+ * catches every click and the knob and switch never see the mouse. */
 .simple-volume{{{cns}}} .mod-drag-handle {
     position: absolute;
     left: 0;
@@ -62,6 +67,7 @@
     background-image: url(/resources/knob.png{{{ns}}});
     background-repeat: no-repeat;
     cursor: pointer;
+    z-index: 30;             /* above the drag handle (20) */
 }
 
 /* ---- The LED ----------------------------------------------------------
@@ -75,6 +81,7 @@
     height: 26px;
     background-image: url(/resources/led.png{{{ns}}});
     background-position: 0 0;          /* left frame = off */
+    z-index: 30;
 }
 .simple-volume{{{cns}}} .sv-light.on {
     background-position: -26px 0;      /* slide left 26 px = right frame */
@@ -92,6 +99,7 @@
     background-image: url(/resources/footswitch.png{{{ns}}});
     background-position: 0 0;
     cursor: pointer;
+    z-index: 30;             /* above the drag handle (20) */
 }
 /* Careful: MOD names the footswitch classes the OTHER way round from
  * the LED. The footswitch gets "on" when BYPASS is on (pedal OFF), and
