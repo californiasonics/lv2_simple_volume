@@ -1,0 +1,107 @@
+/* =====================================================================
+ *  stylesheet-lv2_simple_volume.css  -  MODGUI FILE 3 of 3
+ * =====================================================================
+ *
+ *  WHAT THIS FILE IS
+ *  -----------------
+ *  CSS = "Cascading Style Sheets": the layout and look of each layer
+ *  in the HTML file. All sizes are in pixels (px), measured from the
+ *  TOP-LEFT corner of the pedal:
+ *
+ *      (0,0) -------- 200 px -------->
+ *        |    +---------------------+
+ *        |    |   +  .------.   +   |
+ *        |    |     ( (knob) )      |   knob:   left 47, top 43,  108 x 108
+ *        |    |      '------'       |
+ *      442 px |                     |
+ *        |    |      [ VOL ]        |   (jacks: top 250, on the sides)
+ *        |    |                     |
+ *        |    |   (o)  (switch)     |   LED:    left 24, top 375,  26 x 26
+ *        v    |   +             +   |   switch: left 58, top 345,  84 x 84
+ *             +---------------------+
+ *
+ *  If you change the artwork, these numbers are what you adjust.
+ *
+ *  /resources/...{{{ns}}}  means "a file in my modgui folder". MOD
+ *  fills in {{{ns}}} and {{{cns}}} so two different plugins can both
+ *  have a file called knob.png without getting mixed up.
+ *
+ *  A rule reads:   which-element { property: value; ... }
+ * ===================================================================== */
+
+
+/* ---- The pedal body ------------------------------------------------- */
+.simple-volume{{{cns}}} {
+    width: 200px;
+    height: 442px;
+    background-image: url(/resources/pedal.png{{{ns}}});
+    background-repeat: no-repeat;
+    position: relative;      /* lets the parts below be placed inside it */
+}
+
+/* The invisible drag handle fills the whole pedal */
+.simple-volume{{{cns}}} .mod-drag-handle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 200px;
+    height: 442px;
+}
+
+/* ---- The knob ---------------------------------------------------------
+ * The element is ONE frame wide (108 x 108) - a window onto the film
+ * strip. knob.png is 65 frames x 108 px = 7020 px wide. MOD slides the
+ * strip left or right to show the right frame as you drag.
+ * Drag UP to turn clockwise, DOWN for anti-clockwise.                    */
+.simple-volume{{{cns}}} .sv-knob {
+    position: absolute;
+    left: 47px;
+    top: 43px;
+    width: 108px;
+    height: 108px;
+    background-image: url(/resources/knob.png{{{ns}}});
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+/* ---- The LED ----------------------------------------------------------
+ * led.png has 2 frames side by side: [off | on], each 26 x 26.
+ * We show the left half normally, and the right half when "on".          */
+.simple-volume{{{cns}}} .sv-light {
+    position: absolute;
+    left: 24px;
+    top: 375px;
+    width: 26px;
+    height: 26px;
+    background-image: url(/resources/led.png{{{ns}}});
+    background-position: 0 0;          /* left frame = off */
+}
+.simple-volume{{{cns}}} .sv-light.on {
+    background-position: -26px 0;      /* slide left 26 px = right frame */
+}
+
+/* ---- The footswitch ---------------------------------------------------
+ * Same trick: footswitch.png is [up | pressed], each 84 x 84.
+ * The pressed frame has a slightly darker cap.                */
+.simple-volume{{{cns}}} .sv-footswitch {
+    position: absolute;
+    left: 58px;
+    top: 345px;
+    width: 84px;
+    height: 84px;
+    background-image: url(/resources/footswitch.png{{{ns}}});
+    background-position: 0 0;
+    cursor: pointer;
+}
+/* Careful: MOD names the footswitch classes the OTHER way round from
+ * the LED. The footswitch gets "on" when BYPASS is on (pedal OFF), and
+ * "off" when the pedal is active. So the pressed frame goes with ".off". */
+.simple-volume{{{cns}}} .sv-footswitch.off {
+    background-position: -84px 0;
+}
+
+/* ---- Audio jacks: how far down the sides they sit ------------------- */
+.simple-volume{{{cns}}} .mod-pedal-input,
+.simple-volume{{{cns}}} .mod-pedal-output {
+    top: 250px;
+}

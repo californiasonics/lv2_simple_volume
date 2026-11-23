@@ -1,0 +1,54 @@
+# =====================================================================
+#  modgui.ttl  -  MODGUI FILE 1 of 3
+# =====================================================================
+#
+#  WHAT THIS FILE IS
+#  -----------------
+#  Tells MOD "this plugin has its own custom pedal graphic, and here
+#  are its parts". Without it, MOD shows "No interface available" and
+#  draws a plain generic pedal.
+#
+#  "modgui" is MOD's own addition to LV2. Other LV2 hosts (like a PC
+#  audio program) ignore it, so the plugin still works everywhere.
+#
+#  manifest.ttl points to this file with another rdfs:seeAlso line.
+#
+#  The graphics live in the modgui/ folder:
+#     pedal.png       the pedal body
+#     knob.png        the knob "film strip" (see tools/make_knob_strip.py)
+#     led.png         the LED, off and on
+#     footswitch.png  the footswitch, up and down
+#     screenshot / thumbnail   pictures for MOD's pedal list
+# =====================================================================
+
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+@prefix modgui: <http://moddevices.com/ns/modgui#> .
+
+<https://github.com/californiasonics/lv2_simple_volume>
+    modgui:gui [
+        # The folder holding the graphics. In the HTML and CSS,
+        # "/resources/knob.png" means modgui/knob.png
+        modgui:resourcesDirectory <modgui> ;
+
+        # The layers of the pedal (MODGUI FILE 2)
+        modgui:iconTemplate <modgui/icon-lv2_simple_volume.html> ;
+
+        # Where each layer sits and what it looks like (MODGUI FILE 3)
+        modgui:stylesheet <modgui/stylesheet-lv2_simple_volume.css> ;
+
+        # Pictures for the info panel and the pedal list
+        modgui:screenshot <modgui/screenshot-lv2_simple_volume.png> ;
+        modgui:thumbnail <modgui/thumbnail-lv2_simple_volume.png> ;
+
+        modgui:brand "Calsonics" ;
+        modgui:label "Volume" ;
+
+        # The controls shown on the pedal. Here lv2:index is the
+        # control's POSITION on the pedal (first knob = 0), and
+        # lv2:symbol must match the port's symbol in lv2_simple_volume.ttl
+        modgui:port [
+            lv2:index 0 ;
+            lv2:symbol "volume" ;
+            lv2:name "Volume"
+        ]
+    ] .

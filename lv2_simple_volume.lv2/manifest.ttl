@@ -64,5 +64,9 @@
 
     # "See also": the full description (knobs, switches, name) is in
     # this second file. MOD reads it only when it needs the details.
-    rdfs:seeAlso <lv2_simple_volume.ttl> .
-    #                                   ^ full stop = end of sentence
+    rdfs:seeAlso <lv2_simple_volume.ttl> ,
+
+    # ...and the custom pedal graphic for MOD is described here.
+    # (The comma means "and also see this file".)
+                 <modgui.ttl> .
+    #                         ^ full stop = end of sentence

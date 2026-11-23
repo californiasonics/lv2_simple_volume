@@ -1,0 +1,67 @@
+<!--
+=====================================================================
+  icon-lv2_simple_volume.html  -  MODGUI FILE 2 of 3
+=====================================================================
+
+  WHAT THIS FILE IS
+  -----------------
+  The LAYERS of the pedal you see on MOD's board, stacked like
+  transparent sheets:
+
+      bottom  pedal.png        the body artwork (no knob, no switch)
+              drag handle      invisible - grab here to move the pedal
+              knob             turns when you drag it   -> "volume" port
+              LED              lights when the pedal is on
+      top     footswitch       click to switch on/off   -> "enabled" port
+              audio jacks      where you plug the virtual cables
+
+  This file only says WHAT is on the pedal. WHERE things sit and WHAT
+  they look like is in the stylesheet (file 3).
+
+  HOW MOD CONNECTS IT
+  -------------------
+  MOD looks for special "mod-role" attributes:
+     mod-role="input-control-port" + mod-port-symbol="volume"
+         -> "this is the knob for the port whose lv2:symbol is volume"
+     mod-role="bypass"          -> the footswitch
+     mod-role="bypass-light"    -> the LED
+     mod-role="drag-handle"     -> where you grab the pedal to move it
+  The symbol "volume" must match lv2:symbol in lv2_simple_volume.ttl.
+
+  {{{cns}}}  and  {{#...}} ... {{/...}}  are filled in by MOD when it
+  draws the pedal (a "template"). Leave them exactly as they are.
+=====================================================================
+-->
+<div class="mod-pedal simple-volume{{{cns}}}">
+
+    <!-- Invisible layer covering the pedal: click-and-drag to move it -->
+    <div mod-role="drag-handle" class="mod-drag-handle"></div>
+
+    <!-- The knob. MOD slides the knob.png film strip to show the
+         frame that matches the current volume. -->
+    <div class="sv-knob" mod-role="input-control-port" mod-port-symbol="volume"></div>
+
+    <!-- The LED: MOD adds the class "on" or "off" -->
+    <div class="sv-light" mod-role="bypass-light"></div>
+
+    <!-- The footswitch: click to toggle. MOD adds "on" when bypassed, "off" when active -->
+    <div class="sv-footswitch" mod-role="bypass"></div>
+
+    <!-- Audio input jack(s): one for each audio input port in the .ttl -->
+    <div class="mod-pedal-input">
+        {{#effect.ports.audio.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.audio.input}}
+    </div>
+
+    <!-- Audio output jack(s) -->
+    <div class="mod-pedal-output">
+        {{#effect.ports.audio.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.audio.output}}
+    </div>
+</div>

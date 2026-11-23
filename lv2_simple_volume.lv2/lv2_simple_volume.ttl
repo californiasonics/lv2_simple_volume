@@ -59,6 +59,8 @@
 
     # ---- Information shown to the user --------------------------------
     doap:name "Simple Volume" ;                  # full name in lists
+    doap:homepage <https://github.com/californiasonics/lv2_simple_volume> ;
+    rdfs:comment "A minimal one-knob, one-footswitch volume pedal, built to explain how LV2 plugins work." ;
     doap:license <http://opensource.org/licenses/isc> ;
     doap:maintainer [ foaf:name "californiasonics" ] ;
     mod:brand "Calsonics" ;                         # small text on the pedal

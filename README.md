@@ -11,6 +11,14 @@ is built and added to MOD. From the californiasonics YouTube channel.
 | `lv2_simple_volume.lv2/lv2_simple_volume.ttl` | Describes the pedal: name, knob, footswitch, audio ports |
 | `lv2_simple_volume.c` | The audio processing code |
 | `Makefile` | Compiles the code and installs the plugin |
+| `lv2_simple_volume.lv2/modgui.ttl` | Tells MOD the plugin has a custom pedal graphic |
+| `lv2_simple_volume.lv2/modgui/icon-lv2_simple_volume.html` | The layers of the pedal: body, knob, LED, footswitch, jacks |
+| `lv2_simple_volume.lv2/modgui/stylesheet-lv2_simple_volume.css` | Where each layer sits and what it looks like |
+| `lv2_simple_volume.lv2/modgui/*.png` | The artwork |
+| `artwork/pedal_original.jpg` | The original pedal graphic |
+| `artwork/pedal_body_dB.png` | The pedal body with the dial marked in dB (−40 to +6) |
+| `artwork/knob_cutout.png` | The knob cut out of it, pointer at 12 o'clock (input for the knob tool) |
+| `tools/make_knob_strip.py` | Turns one knob picture into the film strip MOD needs |
 
 ## Install on a pi-Stomp
 
